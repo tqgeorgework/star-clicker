@@ -1,9 +1,18 @@
 <template>
-  <router-view/>
+<div>
+  <h1>Star Clicker</h1>
+  <resource-display/>
+  <star-clicker/>
+  <build-menu/>
+</div>
 </template>
 
 <script>
-export default {};
+import BuildMenu from './components/BuyMenu.vue';
+import ResourceDisplay from './components/ResourceDisplay.vue';
+import StarClicker from './components/StarClicker.vue';
+export default {
+  components: { StarClicker, ResourceDisplay, BuildMenu },};
 </script>
 
 <style>
@@ -11,7 +20,7 @@ body {
   background-color: lightgray;
 }
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
