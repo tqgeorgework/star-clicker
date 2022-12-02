@@ -5,20 +5,32 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    
+    
     resources: {
       clickCount: 0,
-      mineralCount: 0,
+      mineralCount: 100,
       gasCount: 0,
+      supplyCount: 0,
+      maxSupplyCount: 8,
     },
     units: [
       {
         name: "Servo",
         speed: 5000,
-        gatherAmount: 1,
-        available: true
+        gatherAmount: 5,
+        mineralHarvest: 5,
+        gasHarvest: 3,
+        available: true,
+        mineralCost: 50,
+        gasCost: 0,
+        timeCost: 12000,
+        supplyCost: 1,
       }
     ],
+    recruitedUnits: [],
     buildings: [],
+    constructedBuildings: [],
     upgrades: [],
   },
   getters: {
@@ -31,6 +43,15 @@ export default new Vuex.Store({
     clicks(state) {
       return state.resources.clickCount;
     },
+    supply(state) {
+      return state.resources.supplyCount;
+    },
+    maxSupply(state) {
+      return state.resources.maxSupplyCount;
+    },
+    unit(state, name) {
+      return state.units.find(unit => unit.name === name);
+    }
   },
   mutations: {
     PLUS_MINERALS(state) {
@@ -46,6 +67,22 @@ export default new Vuex.Store({
       if (amount <= minerals) {
         state.resources.mineralCount = minerals-amount;
       }
+    },
+    SPEND_GAS(state, amount) {
+      let gas = state.resources.gasCount;
+      if (amount <= gas) {
+        state.resources.gasCount = gas-amount;
+      }
+    },
+    ADD_UNIT(state, unit) {
+      state.recruitedUnits.push(unit);
+    },
+    SUPPLY_COUNT(state) {
+      let count = 0;
+      state.recruitedUnits.forEach(unit => {
+        count += unit.supplyCost
+      })
+      state.resources.supplyCount = count;
     }
   },
   actions: {

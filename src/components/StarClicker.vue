@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="button-container">
       <button @click="plusMinerals">Gather Minerals</button>
       <button @click="plusGas">Gather Gas</button>
   </div>
@@ -19,5 +19,7 @@ export default {
 </script>
 
 <style>
-
+button {
+    margin-right: 1vw;
+}
 </style>
