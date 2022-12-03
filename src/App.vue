@@ -3,16 +3,16 @@
   <h1>Star Clicker</h1>
   <resource-display/>
   <star-clicker/>
-  <build-menu/>
+  <buy-menu/>
 </div>
 </template>
 
 <script>
-import BuildMenu from './components/BuyMenu.vue';
+import BuyMenu from './components/UnitMenu.vue';
 import ResourceDisplay from './components/ResourceDisplay.vue';
 import StarClicker from './components/StarClicker.vue';
 export default {
-  components: { StarClicker, ResourceDisplay, BuildMenu },};
+  components: { StarClicker, ResourceDisplay, BuyMenu },};
 </script>
 
 <style>

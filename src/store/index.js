@@ -5,14 +5,14 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    
-    
+    maxSupplyCap: 200,
+    refineryCount: 0,
     resources: {
       clickCount: 0,
       mineralCount: 100,
       gasCount: 0,
       supplyCount: 0,
-      maxSupplyCount: 8,
+      maxSupplyCount: 0,
     },
     units: [
       {
@@ -29,9 +29,38 @@ export default new Vuex.Store({
       }
     ],
     recruitedUnits: [],
-    buildings: [],
+    buildings: [
+      {
+        name: "Command Center",
+        mineralCost: 400,
+        gasCost: 0,
+        timeCost: 71000,
+        supply: 10,
+        recruitList: [
+          "Servo"
+        ],
+        maxWorkers: 16,
+        activeWorkers: 0,
+      },
+      {
+        name: "Supply Depot",
+        mineralCost: 100,
+        gasCost: 0,
+        timeCost: 40000,
+        supply: 8,
+      },
+      {
+        name: "Refinery",
+        mineralCost: 75,
+        gasCost: 0,
+        timeCost: 40000,
+        maxWorkerCount: 3,
+        activeWorkers: 0
+      }
+    ],
     constructedBuildings: [],
     upgrades: [],
+    researchedUpgrades: [],
   },
   getters: {
     minerals(state) {
@@ -49,8 +78,11 @@ export default new Vuex.Store({
     maxSupply(state) {
       return state.resources.maxSupplyCount;
     },
-    unit(state, name) {
-      return state.units.find(unit => unit.name === name);
+    servo(state) {
+      return state.units.find(unit => unit.name === "Servo");
+    },
+    cc(state) {
+      return state.buildings.find(building => building.name === "Command Center")
     }
   },
   mutations: {
@@ -65,25 +97,41 @@ export default new Vuex.Store({
     SPEND_MINERALS(state, amount) {
       let minerals = state.resources.mineralCount;
       if (amount <= minerals) {
-        state.resources.mineralCount = minerals-amount;
+        state.resources.mineralCount = minerals - amount;
       }
     },
     SPEND_GAS(state, amount) {
       let gas = state.resources.gasCount;
       if (amount <= gas) {
-        state.resources.gasCount = gas-amount;
+        state.resources.gasCount = gas - amount;
       }
     },
     ADD_UNIT(state, unit) {
       state.recruitedUnits.push(unit);
     },
+    CONSTRUCT_BUILDING(state, building) {
+      state.constructedBuildings.push(building)
+    },
     SUPPLY_COUNT(state) {
       let count = 0;
       state.recruitedUnits.forEach(unit => {
-        count += unit.supplyCost
+        if (unit.supplyCost != null) {
+          count += unit.supplyCost
+        }
       })
       state.resources.supplyCount = count;
-    }
+    },
+    MAX_SUPPLY_COUNT(state) {
+      let count = 0;
+      state.constructedBuildings.forEach(building => {
+        if (building.supply != null) {
+          count += building.supply;
+        }
+      })
+      count > state.maxSupplyCap ?
+        state.resources.maxSupplyCount = state.maxSupplyCap :
+        state.resources.maxSupplyCount = count;
+    },
   },
   actions: {
   },

@@ -1,31 +1,27 @@
 <template>
   <div>
-    <h3>Recruit Units</h3>
-    <div v-for="unit in this.$store.state.units" :key="unit.name">
-      <h4>{{ unit.name }}</h4>
+    <h3>Buildings</h3>
+    <div v-for="building in this.$store.state.constructedBuildings" :key="building.name">
+      <h4>{{ building.name }}</h4>
       <div class="description">
-        {{ gatherDescription(unit) }}
+        {{ gatherDescription(building) }}
       </div>
       <div class="cost-box">
         <div>Cost:</div>
-        <div title="Minerals" v-if="unit.mineralCost">
+        <div title="Minerals" v-if="building.mineralCost">
           <font-awesome-icon icon="fa-solid fa-gem" />
-          {{ unit.mineralCost }}
+          {{ building.mineralCost }}
         </div>
-        <div title="Gas" v-if="unit.gasCost">
+        <div title="Gas" v-if="building.gasCost">
           <font-awesome-icon icon="fa-solid fa-cloud" />
-          {{ unit.gasCost }}
+          {{ building.gasCost }}
         </div>
-        <div title="Supply" v-if="unit.supplyCost">
-          <font-awesome-icon icon="fa-solid fa-person" />
-          {{ unit.supplyCost }}
-        </div>
-        <div title="Time" v-if="unit.timeCost">
+        <div title="Time" v-if="building.timeCost">
           <font-awesome-icon icon="fa-solid fa-clock" />
-          {{ unit.timeCost / 1000 }}
+          {{ building.timeCost / 1000 }}
         </div>
       </div>
-      <button :disabled="!isPurchaseable(unit)" @click="recruitUnit(unit)">
+      <button :disabled="!isPurchaseable(building)" @click="recruitUnit(building)">
         Recruit
       </button>
     </div>
@@ -35,15 +31,15 @@
 <script>
 export default {
   components: {},
-  name: "unit-menu",
+  name: "building-menu",
   methods: {
     plural(num) {
       return num === 1 ? "" : "s";
     },
-    gatherDescription(unit) {
-      const minerals = unit.mineralHarvest;
-      const gas = unit.gasHarvest;
-      const speed = unit.speed;
+    gatherDescription(building) {
+      const minerals = building.mineralHarvest;
+      const gas = building.gasHarvest;
+      const speed = building.speed;
       return `Gathers ${minerals} mineral${this.plural(
         minerals
       )} or ${gas} gas every 
@@ -51,8 +47,6 @@ export default {
     },
     isPurchaseable(unit) {
       if (
-        // this.buyCooldown(unit) === false ||
-        this.$store.getters.supply >= this.$store.getters.maxSupply ||
         unit.mineralCost > this.$store.getters.minerals ||
         unit.gasCost > this.$store.getters.gas ||
         unit.supplyCost > this.$store.getters.maxSupply
@@ -67,21 +61,15 @@ export default {
       this.payGas(unit);
       this.$store.commit("ADD_UNIT", unit);
       this.$store.commit("SUPPLY_COUNT");
-      // this.buyCooldown();
     },
-    payMinerals(object) {
-      const amount = object.mineralCost;
+    payMinerals(unit) {
+      const amount = unit.mineralCost;
       this.$store.commit("SPEND_MINERALS", amount);
     },
-    payGas(object) {
-      const amount = object.gasCost;
+    payGas(unit) {
+      const amount = unit.gasCost;
       this.$store.commit("SPEND_GAS", amount);
     },
-    // buyCooldown(object) {
-    //   let output = false;
-    //   setTimeout(output = true, object.timeCost)
-    //   return output;
-    // }
   },
   computed: {},
 };
