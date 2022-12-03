@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import BuyMenu from './components/UnitMenu.vue';
+import BuyMenu from './components/BuyMenu.vue';
 import ResourceDisplay from './components/ResourceDisplay.vue';
 import StarClicker from './components/StarClicker.vue';
 export default {

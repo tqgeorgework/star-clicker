@@ -1,10 +1,14 @@
 <template>
   <div>
     <h3>Buildings</h3>
-    <div v-for="building in this.$store.state.constructedBuildings" :key="building.name">
+    <div
+      class="buildings"
+      v-for="building in this.$store.state.buildings"
+      :key="building.name"
+    >
       <h4>{{ building.name }}</h4>
       <div class="description">
-        {{ gatherDescription(building) }}
+        {{ building.description }}
       </div>
       <div class="cost-box">
         <div>Cost:</div>
@@ -21,8 +25,11 @@
           {{ building.timeCost / 1000 }}
         </div>
       </div>
-      <button :disabled="!isPurchaseable(building)" @click="recruitUnit(building)">
-        Recruit
+      <button
+        :disabled="!isPurchaseable(building)"
+        @click="constructBuilding(building)"
+      >
+        Construct
       </button>
     </div>
   </div>
@@ -36,39 +43,47 @@ export default {
     plural(num) {
       return num === 1 ? "" : "s";
     },
-    gatherDescription(building) {
-      const minerals = building.mineralHarvest;
-      const gas = building.gasHarvest;
-      const speed = building.speed;
-      return `Gathers ${minerals} mineral${this.plural(
-        minerals
-      )} or ${gas} gas every 
-      ${speed / 1000} second${this.plural(speed / 1000)}`;
-    },
-    isPurchaseable(unit) {
+    isPurchaseable(building) {
       if (
-        unit.mineralCost > this.$store.getters.minerals ||
-        unit.gasCost > this.$store.getters.gas ||
-        unit.supplyCost > this.$store.getters.maxSupply
+        !this.isUnlocked(building) ||
+        building.mineralCost > this.$store.getters.minerals ||
+        building.gasCost > this.$store.getters.gas
       ) {
         return false;
       } else {
         return true;
       }
     },
-    recruitUnit(unit) {
-      this.payMinerals(unit);
-      this.payGas(unit);
-      this.$store.commit("ADD_UNIT", unit);
-      this.$store.commit("SUPPLY_COUNT");
+    constructBuilding(building) {
+      this.payMinerals(building);
+      this.payGas(building);
+      this.$store.commit("CONSTRUCT_BUILDING", building);
+      this.$store.commit("MAX_SUPPLY_COUNT");
     },
-    payMinerals(unit) {
-      const amount = unit.mineralCost;
+    payMinerals(building) {
+      const amount = building.mineralCost;
       this.$store.commit("SPEND_MINERALS", amount);
     },
-    payGas(unit) {
-      const amount = unit.gasCost;
+    payGas(building) {
+      const amount = building.gasCost;
       this.$store.commit("SPEND_GAS", amount);
+    },
+    isUnlocked(building) {
+      let trueCount = 0;
+      let output = true;
+      if (building.requirements) {
+        building.requirements.forEach(requirement => {
+        if (this.$store.state.constructedBuildings.find(building => building.name === requirement)) {
+          trueCount++;
+        }
+      })
+      if (trueCount === building.requirements.length) {
+          output = true;
+        } else {
+          output = false;
+        }
+      }
+      return output;
     },
   },
   computed: {},

@@ -4,7 +4,7 @@
     <div v-for="unit in this.$store.state.units" :key="unit.name">
       <h4>{{ unit.name }}</h4>
       <div class="description">
-        {{ gatherDescription(unit) }}
+        {{ unit.description }}
       </div>
       <div class="cost-box">
         <div>Cost:</div>
@@ -37,18 +37,18 @@ export default {
   components: {},
   name: "unit-menu",
   methods: {
-    plural(num) {
-      return num === 1 ? "" : "s";
-    },
-    gatherDescription(unit) {
-      const minerals = unit.mineralHarvest;
-      const gas = unit.gasHarvest;
-      const speed = unit.speed;
-      return `Gathers ${minerals} mineral${this.plural(
-        minerals
-      )} or ${gas} gas every 
-      ${speed / 1000} second${this.plural(speed / 1000)}`;
-    },
+    // plural(num) {
+    //   return num === 1 ? "" : "s";
+    // },
+    // gatherDescription(unit) {
+    //   const minerals = unit.mineralHarvest;
+    //   const gas = unit.gasHarvest;
+    //   const speed = unit.speed;
+    //   return `Gathers ${minerals} mineral${this.plural(
+    //     minerals
+    //   )} or ${gas} gas every 
+    //   ${speed / 1000} second${this.plural(speed / 1000)}`;
+    // },
     isPurchaseable(unit) {
       if (
         // this.buyCooldown(unit) === false ||

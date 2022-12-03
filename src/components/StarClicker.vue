@@ -1,7 +1,7 @@
 <template>
   <div class="button-container">
     <button @click="plusMinerals">Gather Minerals</button>
-    <button :disabled="!hasRefinery" @click="plusGas">Gather Gas</button>
+    <button :disabled="!hasRefinery" @click="plusGas">Harvest Gas</button>
   </div>
 </template>
 

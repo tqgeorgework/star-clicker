@@ -21,11 +21,11 @@ export default new Vuex.Store({
         gatherAmount: 5,
         mineralHarvest: 5,
         gasHarvest: 3,
-        available: true,
         mineralCost: 50,
         gasCost: 0,
         timeCost: 12000,
         supplyCost: 1,
+        description: "Constructs buildings, gathers 5 minerals/5 sec, or harvests 3 gas/5 sec",
       }
     ],
     recruitedUnits: [],
@@ -36,6 +36,7 @@ export default new Vuex.Store({
         gasCost: 0,
         timeCost: 71000,
         supply: 10,
+        description: "Recruits workers and allows up to 16 workers to gather minerals",
         recruitList: [
           "Servo"
         ],
@@ -48,15 +49,41 @@ export default new Vuex.Store({
         gasCost: 0,
         timeCost: 40000,
         supply: 8,
+        description: "Provides 8 additional supply.",
       },
       {
         name: "Refinery",
         mineralCost: 75,
         gasCost: 0,
         timeCost: 40000,
+        description: "Allows up to three workers to harvest gas.",
         maxWorkerCount: 3,
         activeWorkers: 0
-      }
+      },
+      {
+        name: "Barracks",
+        mineralCost: 150,
+        gasCost: 0,
+        timeCost: 46000,
+        description: "Recruits infantry units.",
+        requirements: ["Supply Depot"],
+      },
+      {
+        name: "Factory",
+        mineralCost: 150,
+        gasCost: 100,
+        timeCost: 43000,
+        description: "Recruits mechanical units.",
+        requirements: ["Barracks"],
+      },
+      {
+        name: "Starport",
+        mineralCost: 150,
+        gasCost: 100,
+        timeCost: 36000,
+        description: "Recruits spacecraft.",
+        requirements: ["Factory"],
+      },
     ],
     constructedBuildings: [],
     upgrades: [],
@@ -83,7 +110,7 @@ export default new Vuex.Store({
     },
     cc(state) {
       return state.buildings.find(building => building.name === "Command Center")
-    }
+    },
   },
   mutations: {
     PLUS_MINERALS(state) {
