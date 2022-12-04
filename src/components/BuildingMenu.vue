@@ -5,6 +5,7 @@
       class="buildings"
       v-for="building in this.$store.state.buildings"
       :key="building.name"
+      ref="building"
     >
       <h4>{{ building.name }}</h4>
       <div class="description">
@@ -24,10 +25,11 @@
           <font-awesome-icon icon="fa-solid fa-clock" />
           {{ building.timeCost / 1000 }}
         </div>
+        <span v-if="building.constructing">Constructing...{{timerCount}}</span>
       </div>
       <button
         :disabled="!isPurchaseable(building)"
-        @click="constructBuilding(building)"
+        @click="startBuilding(building)"
       >
         Construct
       </button>
@@ -37,14 +39,43 @@
 
 <script>
 export default {
-  components: {},
   name: "building-menu",
+  components: {},
+  data() {
+    return {
+      timerCount: 30
+    }
+  },
+  watch: {
+    timerEnabled(value) {
+      if (value) {
+        setTimeout(() => {
+          this.timerCount--;
+        }, 1000)
+      }
+    },
+    timerCount: {
+      handler(value) {
+        if (value> 0 && this.timerEnabled) {
+          setTimeout(() => {
+            this.timerCount--;
+          }, 1000);
+        }
+      },
+      immediate: true
+    }
+  },
   methods: {
     plural(num) {
       return num === 1 ? "" : "s";
     },
+    startCountdown(building) {
+      this.timerCount = building.timeCost/1000;
+      this.timerEnabled = true;
+    },
     isPurchaseable(building) {
       if (
+        building.constructing === true ||
         !this.isUnlocked(building) ||
         building.mineralCost > this.$store.getters.minerals ||
         building.gasCost > this.$store.getters.gas
@@ -54,19 +85,17 @@ export default {
         return true;
       }
     },
+    startBuilding(building) {
+      building.constructing = true;
+      this.startCountdown(building);
+      this.$store.commit("SPEND_MINERALS", building.mineralCost)
+      this.$store.commit("SPEND_GAS", building.gasCost);
+      setTimeout(this.constructBuilding, building.timeCost, building);
+    },
     constructBuilding(building) {
-      this.payMinerals(building);
-      this.payGas(building);
-      this.$store.commit("CONSTRUCT_BUILDING", building);
+      this.$store.commit("CONSTRUCT_BUILDING", building)
       this.$store.commit("MAX_SUPPLY_COUNT");
-    },
-    payMinerals(building) {
-      const amount = building.mineralCost;
-      this.$store.commit("SPEND_MINERALS", amount);
-    },
-    payGas(building) {
-      const amount = building.gasCost;
-      this.$store.commit("SPEND_GAS", amount);
+      building.constructing = false;
     },
     isUnlocked(building) {
       let trueCount = 0;
@@ -86,7 +115,8 @@ export default {
       return output;
     },
   },
-  computed: {},
+  computed: {
+  },
 };
 </script>
 

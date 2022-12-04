@@ -9,7 +9,7 @@ export default new Vuex.Store({
     refineryCount: 0,
     resources: {
       clickCount: 0,
-      mineralCount: 100,
+      mineralCount: 1000,
       gasCount: 0,
       supplyCount: 0,
       maxSupplyCount: 0,
@@ -25,7 +25,7 @@ export default new Vuex.Store({
         gasCost: 0,
         timeCost: 12000,
         supplyCost: 1,
-        description: "Constructs buildings, gathers 5 minerals/5 sec, or harvests 3 gas/5 sec",
+        description: "Constructs buildings and gathers resources.",
       }
     ],
     recruitedUnits: [],
@@ -35,11 +35,12 @@ export default new Vuex.Store({
         mineralCost: 400,
         gasCost: 0,
         timeCost: 71000,
-        supply: 10,
         description: "Recruits workers and allows up to 16 workers to gather minerals",
+        constructing: false,
         recruitList: [
           "Servo"
         ],
+        supply: 10,
         maxWorkers: 16,
         activeWorkers: 0,
       },
@@ -48,8 +49,9 @@ export default new Vuex.Store({
         mineralCost: 100,
         gasCost: 0,
         timeCost: 40000,
-        supply: 8,
         description: "Provides 8 additional supply.",
+        constructing: false,
+        supply: 8,
       },
       {
         name: "Refinery",
@@ -57,8 +59,9 @@ export default new Vuex.Store({
         gasCost: 0,
         timeCost: 40000,
         description: "Allows up to three workers to harvest gas.",
+        constructing: false,
         maxWorkerCount: 3,
-        activeWorkers: 0
+        activeWorkers: 0,
       },
       {
         name: "Barracks",
@@ -66,6 +69,7 @@ export default new Vuex.Store({
         gasCost: 0,
         timeCost: 46000,
         description: "Recruits infantry units.",
+        constructing: false,
         requirements: ["Supply Depot"],
       },
       {
@@ -74,6 +78,7 @@ export default new Vuex.Store({
         gasCost: 100,
         timeCost: 43000,
         description: "Recruits mechanical units.",
+        constructing: false,
         requirements: ["Barracks"],
       },
       {
@@ -82,7 +87,9 @@ export default new Vuex.Store({
         gasCost: 100,
         timeCost: 36000,
         description: "Recruits spacecraft.",
+        constructing: false,
         requirements: ["Factory"],
+        
       },
     ],
     constructedBuildings: [],
